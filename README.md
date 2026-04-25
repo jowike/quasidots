@@ -8,20 +8,26 @@ SITU extends the ROCKET framework by replacing the dot product with quasi dot pr
 
 ## Installation
 
+```
 pip install -r requirements.txt
 pip install -e .
+```
 
 ## Usage
 
+```
 from situ import SITUClassifier
 
 clf = SITUClassifier(operation="AT", num_kernels=1000)
 clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
+```
 
 ## Experiments
 
+```
 python experiments/run_example.py
+```
 
 ## Reproducibility
 
