@@ -1,0 +1,5 @@
+numpy
+scikit-learn
+numba
+aeon
+sktime
