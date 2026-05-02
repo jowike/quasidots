@@ -5,7 +5,7 @@ from sklearn.utils.validation import check_random_state
 from .kernels import transform
 
 
-class SITUClassifier:
+class QuasidoTSClassifier:
     def __init__(self, num_kernels=1000, operation="AT", random_state=None):
         self.num_kernels = num_kernels
         self.operation = operation

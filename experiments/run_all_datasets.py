@@ -4,7 +4,7 @@ from aeon.datasets import load_classification
 from sklearn.metrics import accuracy_score
 from sktime.classification.kernel_based import RocketClassifier
 
-from situ import SITUClassifier
+from quasidots import QuasidoTSClassifier
 
 import warnings
 
@@ -24,7 +24,7 @@ def run_single(dataset, operation, num_kernels, seed):
         X_train, y_train = load_classification(dataset, split="train", load_equal_length=True, load_no_missing=True)
         X_test, y_test = load_classification(dataset, split="test", load_equal_length=True, load_no_missing=True)
 
-        situ = SITUClassifier(
+        quasidots = QuasidoTSClassifier(
             num_kernels=num_kernels,
             operation=operation,
             random_state=seed
@@ -35,16 +35,16 @@ def run_single(dataset, operation, num_kernels, seed):
             random_state=seed
         )
 
-        situ.fit(X_train, y_train)
+        quasidots.fit(X_train, y_train)
         rocket.fit(X_train, y_train)
 
-        y_pred_situ = situ.predict(X_test)
+        y_pred_quasidots = quasidots.predict(X_test)
         y_pred_rocket = rocket.predict(X_test)
 
-        acc_situ = accuracy_score(y_test, y_pred_situ)
+        acc_quasidots = accuracy_score(y_test, y_pred_quasidots)
         acc_rocket = accuracy_score(y_test, y_pred_rocket)
 
-        return acc_situ, acc_rocket
+        return acc_quasidots, acc_rocket
 
     except Exception as e:
         print(f"[ERROR] {dataset}: {e}")
@@ -56,15 +56,15 @@ def run_all(operation="AT", num_kernels=1000, seed=42, output_file="results.csv"
     for i, dataset in enumerate(DATASETS):
         print(f"[{i+1}/{len(DATASETS)}] Running {dataset}...")
 
-        acc_situ, acc_rocket = run_single(
+        acc_quasidots, acc_rocket = run_single(
             dataset, operation, num_kernels, seed
         )
 
         results.append({
             "dataset": dataset,
-            "situ_accuracy": acc_situ,
+            "quasidots_accuracy": acc_quasidots,
             "rocket_accuracy": acc_rocket,
-            "difference": None if acc_situ is None else acc_situ - acc_rocket
+            "difference": None if acc_quasidots is None else acc_quasidots - acc_rocket
         })
 
     df = pd.DataFrame(results)
@@ -77,7 +77,7 @@ def run_all(operation="AT", num_kernels=1000, seed=42, output_file="results.csv"
     losses = (valid["difference"] < 0).sum()
     draws = (valid["difference"] == 0).sum()
 
-    print(f"SITU wins: {wins}")
+    print(f"QuasidoTS wins: {wins}")
     print(f"ROCKET wins: {losses}")
     print(f"Draws: {draws}")
 

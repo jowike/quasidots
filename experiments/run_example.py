@@ -1,5 +1,5 @@
 from aeon.datasets import load_classification
-from situ.classifier import SITUClassifier
+from quasidots.classifier import QuasidoTSClassifier
 from sktime.classification.kernel_based import RocketClassifier
 from sklearn.metrics import accuracy_score
 
@@ -8,7 +8,7 @@ def run(dataset, operation="AT", num_kernels=1000, seed=42):
     X_train, y_train = load_classification(dataset, split="train", load_equal_length=True, load_no_missing=True)
     X_test, y_test = load_classification(dataset, split="test", load_equal_length=True, load_no_missing=True)
 
-    situ = SITUClassifier(
+    quasidots = QuasidoTSClassifier(
         num_kernels=num_kernels,
         operation=operation,
         random_state=seed
@@ -19,11 +19,11 @@ def run(dataset, operation="AT", num_kernels=1000, seed=42):
         random_state=seed
     )
 
-    situ.fit(X_train, y_train)
+    quasidots.fit(X_train, y_train)
     rocket.fit(X_train, y_train)
 
     return {
-        "situ": accuracy_score(y_test, situ.predict(X_test)),
+        "quasidots": accuracy_score(y_test, quasidots.predict(X_test)),
         "rocket": accuracy_score(y_test, rocket.predict(X_test))
     }
 

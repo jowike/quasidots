@@ -6,41 +6,41 @@ from numba import njit, prange
 # OPERATORY (Twoje)
 # =========================
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def arc_tan(a, b):
     return a * (2 / np.pi) * np.arctan(b)
 
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def sigm(x, exp=5):
     return 1 / (1 + np.exp(-exp * x))
 
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def sigmoidal(a, b):
     return a * sigm(b)
 
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def ext_sigmoidal(a, b):
     return np.sign(a * b) * sigm(a * b)
 
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def log_ext(a, b):
     if a * b == -1:
         return 0
     return np.log(np.abs(a * b + 1))
 
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def reduced_log_ext(a, b):
     if a * b == -1:
         return 0
     return max(np.log(np.abs(a * b + 1)), -1)
 
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def power_fun(a, exp=0.5):
     return np.sign(a) * np.power(np.abs(a), exp)
 
@@ -49,7 +49,7 @@ def power_fun(a, exp=0.5):
 # OPERATOR SWITCH (numba-safe)
 # =========================
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def apply_operator(op, a, b):
     if op == 0:
         return arc_tan(a, b)
@@ -71,7 +71,7 @@ def apply_operator(op, a, b):
 # UNIVARIATE
 # =========================
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def _apply_kernel_univariate(X, weights, length, bias, dilation, padding, op):
     n_timepoints = len(X)
 
@@ -103,7 +103,7 @@ def _apply_kernel_univariate(X, weights, length, bias, dilation, padding, op):
 # MULTIVARIATE (KLUCZOWE)
 # =========================
 
-@njit(fastmath=True, cache=True)
+@njit(fastmath=True, cache=False)
 def _apply_kernel_multivariate(
     X, weights, length, bias, dilation, padding,
     num_channel_indices, channel_indices
@@ -139,7 +139,7 @@ def _apply_kernel_multivariate(
 # GŁÓWNA TRANSFORMACJA
 # =========================
 
-@njit(parallel=True, fastmath=True, cache=True)
+@njit(parallel=True, fastmath=True, cache=False)
 def transform(
     X,
     weights,
